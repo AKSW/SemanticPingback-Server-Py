@@ -1,0 +1,4 @@
+semanticpingback
+flask
+flask-cors
+rdflib

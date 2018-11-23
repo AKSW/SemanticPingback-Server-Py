@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+  <head xml:lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:pingback="http://purl.org/net/pingback/" xmlns:foaf="http://xmlns.com/foaf/0.1/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Public AKSW Semantic Pingback Server" />
+
+    <title>Semantic Pingback Service</title>
+
+    <meta name="description" content="Adding a social dimension to the Linked Data Web. The Semantic Pingback mechanism is an extension of the well-known Pingback method, a technological cornerstone of the blogosphere, thus supporting the interlinking within the Data Web.">
+</head>
+
+<body>
+  <div id="content">
+      <div class="teaser">
+        <h1>AKSW Semantic Pingback Service</h1>
+        <p class="tagline">Adding a social dimension to the Linked Data Web.</p>
+        <p>[<a href="http://aksw.org/Projects/SemanticPingback">Project Page</a>], [<a href="https://aksw.github.io/SemanticPingback/">Description</a>]</p>
+        <p>The <a href="https://aksw.github.io/SemanticPingback/">Semantic Pingback mechanism</a>
+            is an extension of the well-known Pingback method, a technological
+            cornerstone of the blogosphere, thus supporting the interlinking
+            within the Data Web.</p>
+        <p>This Standalone Semantic Pingback Service can be used
+            to pingback-enable Semantic Web (and other) resources.</p>
+      </div>
+      <hr class="teaserhr" />
+
+      <h2>How to test Semantic Pingback/send a pingback?</h2>
+      <p>You can ping this service by adding a HTML link to this service to
+          one of your resources and type the source and target resource
+          URLs directly into these input fields:
+      <form
+          xmlns:ping="http://purl.org/net/pingback/"
+          about="" typeof="ping:Container"
+          method="post" style="margin: 2em 0 1em 0">
+              <table>
+                  <tr>
+                      <td><input name="source" type="text" maxlength="255"
+                                 style="width: 25em; border: 1px solid #999; height: 18px; background-color: #eee"
+                                 value=""/>
+                      </td>
+                      <td style="padding-left: 0.5em">(source resource,
+                          e.g. <em>your <a href="http://esw.w3.org/WebID">WebID</a></em>)</td>
+                  </tr>
+                  <tr>
+                      <td><input name="target" type="text" maxlength="255"
+                                 style="width: 25em; border: 1px solid #999; height: 18px; margin-top: 8px; background-color: #eee"
+                                 value=""/>
+                      </td>
+                      <td style="padding-top: 0.2em; padding-left: 0.5em">
+                          (target resource, e.g. <em>your new friends <a href="http://esw.w3.org/WebID">WebID</a></em>)
+                      </td>
+                  </tr>
+                  <tr>
+                      <td><textarea name="comment" cols="80" rows="3"
+                                    style="width: 25em; max-width: 30em; border: 1px solid #999; margin-top: 8px; background-color: #eee"></textarea></td>
+                      <td style="width: 30em; vertical-align: top; padding-top: 0.2em; padding-left: 0.5em">(optional comment)</td>
+                  </tr>
+                  <tr>
+                      <td><input type="submit" value="Request Pingback" /> (<a href="{{ endpointurl }}">reset</a>)</td>
+                      <td></td>
+                  </tr>
+              </table>
+          </form>
+          <p>Note: This standalone pingback server does not modify any resource.</p>
+          <p>Here is a list of the last Pingbacks received by <code>{{ endpointurl }}</code>.
+            links_to predicates typically indicate a HTML-link while every other predicate is
+            from an RDF resource or RDFa encoded in a webpage (not yet implemented).
+          </p>
+          Hallo
+          <ul>
+            {% for link in links %}
+              <li><a href='{{ link[0] }}'>{{ link[0] }}</a> (Predicate: <a href='{{ link[1] }}'>{{ link[1] }}</a>) <a href='{{ link[2] }}'>{{ link[2] }}</a> </li>
+            {% endfor %}
+          </ul>
+
+      <h2>How to use it with your resources/receive a pingback?</h2>
+      <p>
+          In order to use this service for one of your resources (e.g.
+          your WebID) you can propagate the use of the AKSW Semantic
+          Pingback service in two ways:
+          <ul>
+              <li>Return a <code>X-Pingback: {{ endpointurl }}</code>
+                HTTP header field, when your resource is requested.
+                This solution is downward compatible with the conventional
+                Pingback mechanism, since this method is part of the
+                autodiscovery process.
+                On a apache webserver, you could create a <code>.htaccess</code>
+                file with the following code: <code>Header set X-Pingback
+                    "{{ endpointurl }}"</code>.
+              </li>
+              <li>Embed a <code><acronym title="http://purl.org/net/pingback/">pingback</acronym>:service</code>
+                or <code><acronym title="http://purl.org/net/pingback/">pingback</acronym>:to</code>
+                statement into your FOAF profile, that links your WebID
+                with the URL of the service (see example below). This
+                solution only works with Semantic Pingback clients,
+                since this autodiscovery mechanism is not included in
+                the original Pingback specification.
+                <code><acronym title="http://purl.org/net/pingback/">pingback</acronym>:service</code>
+                links to a traditional Pingback 1.0 Server, while
+                <code><acronym title="http://purl.org/net/pingback/">pingback</acronym>:to</code>
+                links to a server which accepts a simplified pingback request
+                (this Pingback server can accept both).
+                <br />
+                <textarea class="code" rows="8" cols="80" readonly="readonly">&lt;!-- ... --&gt;
+&lt;foaf:Person rdf:about="http://example.org/foaf.rdf#me"&gt;
+&lt;pingback:to
+xmlns:pingback="http://purl.org/net/pingback/"
+rdf:resource="{{ endpointurl }}"
+/&gt
+&lt;/foaf:Person&gt;
+&lt;!-- ... --&gt;</textarea>
+              </li>
+          </ul>
+      </p>
+  </div>
+
+  <ul id="metamenu">
+    <li><a href="http://aksw.org">AKSW Home</a></li>
+    <li><a href="http://blog.aksw.org/">Blog</a></li>
+    <li><a href="http://InfAI.org">InfAI</a></li>
+  </ul>
+</div>
+</body>
+</html>
