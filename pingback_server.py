@@ -43,7 +43,7 @@ def pingback():
     if 'ENDPOINT_URL' in app.config:
         endpointurl = app.config['ENDPOINT_URL']
     else:
-        endpointurl = request.host_url
+        endpointurl = request.url_root
 
     return render_template('start.html', links=triples, success=success,
                            endpointurl=endpointurl)
